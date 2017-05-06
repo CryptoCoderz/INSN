@@ -1,0 +1,9 @@
+Building INSaNe
+
+See doc/readme-qt.rst for instructions on building INSaNe QT,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of INSaNe.
+
+See doc/build-*.txt for instructions on building INSaNed,
+the intended-for-services, no-graphical-interface, reference
+implementation of INSaNe.
