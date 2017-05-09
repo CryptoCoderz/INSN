@@ -214,7 +214,7 @@ Value listunspent(const Array& params, bool fHelp)
             CTxDestination address;
             if (ExtractDestination(pk, address))
             {
-                const CScriptID& hash = boost::get<CScriptID&>(address);
+                const CScriptID& hash = boost::get<CScriptID>(address);
                 CScript redeemScript;
                 if (pwalletMain->GetCScript(hash, redeemScript))
                     entry.push_back(Pair("redeemScript", HexStr(redeemScript.begin(), redeemScript.end())));
@@ -659,7 +659,7 @@ Value searchrawtransactions(const Array &params, bool fHelp)
         } else {
             result.push_back(strHex);
         }
-      
+
         }
         it++;
     }
