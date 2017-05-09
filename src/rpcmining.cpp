@@ -88,7 +88,7 @@ Value getmininginfo(const Array& params, bool fHelp)
         nWeight = pwalletMain->GetStakeWeight();
 
     // Define block rewards
-    int64_t nRewardPoW = (int64_t)GetProofOfWorkReward(pindexBest->pprev, 0);
+    int64_t nRewardPoW = (uint64_t)GetProofOfWorkReward(nBestHeight, 0);
     int64_t nRewardPoS = (int64_t)GetProofOfStakeReward(pindexBest->pprev, 0, 0);
 
     Object obj, diff, weight;
@@ -96,44 +96,24 @@ Value getmininginfo(const Array& params, bool fHelp)
     obj.push_back(Pair("currentblocksize",(uint64_t)nLastBlockSize));
     obj.push_back(Pair("currentblocktx",(uint64_t)nLastBlockTx));
 
-    if(pindexBest->nHeight < Params().EndPoWBlock()) // TODO: add check for proof-of-work not started
-    {
-        diff.push_back(Pair("PoW-difficulty",       GetDifficulty()));
-        obj.push_back(Pair("PoW-blockvalue",        (int64_t)nRewardPoW));
-        obj.push_back(Pair("netmhashps",            GetPoWMHashPS()));
-    }
-    else
-    {
-        diff.push_back(Pair("PoW-difficulty",       "PoW-disabled"));
-        obj.push_back(Pair("PoW-blockvalue",        "PoW-disabled"));
-        obj.push_back(Pair("netmhashps",            "PoW-disabled"));
-    }
+    diff.push_back(Pair("proof-of-work",        GetDifficulty()));
+    diff.push_back(Pair("proof-of-stake",       GetDifficulty(GetLastBlockIndex(pindexBest, true))));
+    diff.push_back(Pair("search-interval",      (int)nLastCoinStakeSearchInterval));
+    obj.push_back(Pair("difficulty",    diff));
 
-    if(pindexBest->nHeight > Params().StartPoSBlock()) // TODO: add check for proof-of-stake stopped
-    {
-        diff.push_back(Pair("PoS-difficulty",       GetDifficulty(GetLastBlockIndex(pindexBest, true))));
-        obj.push_back(Pair("PoS-blockvalue",        (int64_t)nRewardPoS));
-        weight.push_back(Pair("weightminimum",      (uint64_t)nWeight));
-        weight.push_back(Pair("weightmaximum",      (uint64_t)0));
-        weight.push_back(Pair("combinedweight",     (uint64_t)nWeight));
-        obj.push_back(Pair("stakeweight",           weight));
-        obj.push_back(Pair("netstakeweight",        GetPoSKernelPS()));
-        diff.push_back(Pair("search-interval",      (int)nLastCoinStakeSearchInterval));
-    }
-    else
-    {
-        diff.push_back(Pair("PoS-difficulty",       "PoS-disabled"));
-        obj.push_back(Pair("PoS-blockvalue",        "PoS-disabled"));
-        weight.push_back(Pair("weightminimum",      "PoS-disabled"));
-        weight.push_back(Pair("weightmaximum",      "PoS-disabled"));
-        weight.push_back(Pair("combinedweight",     "PoS-disabled"));
-        obj.push_back(Pair("stakeweight",           "PoS-disabled"));
-        obj.push_back(Pair("netstakeweight",        "PoS-disabled"));
-        diff.push_back(Pair("search-interval",      "PoS-disabled"));
-    }
-
+    obj.push_back(Pair("blockvalue-PoS",    nRewardPoS));
+    obj.push_back(Pair("blockvalue-PoW",    nRewardPoW));
+    obj.push_back(Pair("netmhashps",     GetPoWMHashPS()));
+    obj.push_back(Pair("netstakeweight", GetPoSKernelPS()));
     obj.push_back(Pair("errors",        GetWarnings("statusbar")));
     obj.push_back(Pair("pooledtx",      (uint64_t)mempool.size()));
+
+    weight.push_back(Pair("minimum",    (uint64_t)nWeight));
+    weight.push_back(Pair("maximum",    (uint64_t)0));
+    weight.push_back(Pair("combined",  (uint64_t)nWeight));
+    obj.push_back(Pair("stakeweight", weight));
+
+    obj.push_back(Pair("stakeinterest",    (uint64_t)COIN_YEAR_REWARD));
     obj.push_back(Pair("testnet",       TestNet()));
     return obj;
 }

@@ -93,11 +93,12 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
-        vSeeds.push_back(CDNSSeedData("Seed1",  "insane.cryptocoderz.com"));
+        vSeeds.push_back(CDNSSeedData("thecryptochat.net",  "195.74.52.227"));
+        vSeeds.push_back(CDNSSeedData("cryptocoderz.com",  "insane.cryptocoderz.com"));
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
         nPoolMaxTransactions = 3;
-        strDarksendPoolDummyAddress = "IN9pnsexEyBtNUMut8dV1KRNfHtJf6YbvA";
+        strDarksendPoolDummyAddress = "iN9pnsexEyBtNUMut8dV1KRNfHtJf6YbvA";
         nEndPoWBlock = 0x7fffffff;
         nStartPoSBlock = 0;
     }

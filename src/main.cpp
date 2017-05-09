@@ -1480,6 +1480,13 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees)
     if(rand1 <= 8000 && nHeight > nReservePhaseEnd) // 8% Chance of superblock
         nSubsidy = nSuperPoWReward;
 
+    // hardCap v2.1
+    else if(pindexBest->nMoneySupply > MAX_SINGLE_TX)
+    {
+        LogPrint("MINEOUT", "GetProofOfWorkReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
+        return nFees;
+    }
+
     LogPrint("creation", "GetProofOfWorkReward() : create=%s nSubsidy=%d\n", FormatMoney(nSubsidy), nSubsidy);
     return nSubsidy + nFees;
 }
@@ -1503,6 +1510,13 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
     }
     if(rand1 <= 8000) // 8% Chance of superblock
         nSubsidy = nCoinAge * COIN_SPRB_REWARD * 33 / (365 * 33 + 8);
+
+    // hardCap v2.1
+    else if(pindexBest->nMoneySupply > MAX_SINGLE_TX)
+    {
+        LogPrint("MINEOUT", "GetProofOfStakeReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
+        return nFees;
+    }
 
     LogPrint("creation", "GetProofOfStakeReward(): create=%s nCoinAge=%d\n", FormatMoney(nSubsidy), nCoinAge);
     return nSubsidy + nFees;
@@ -1555,7 +1569,7 @@ unsigned int Terminal_Velocity_RateX(const CBlockIndex* pindexLast, bool fProofO
        int64_t prevPoW = 0; // hybrid value
        int64_t prevPoS = 0; // hybrid value
        // Check for blocks to index | Allowing for initial chain start
-       if (pindexLast->nHeight < scanheight+84)
+       if (pindexLast->nHeight < scanheight+114)
            return bnTerminalVelocity.GetCompact(); // can't index prevblock
        // Set prev blocks...
        const CBlockIndex* pindexPrev = pindexLast;
