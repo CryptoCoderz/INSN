@@ -362,7 +362,7 @@ public:
         nStartingHeight = -1;
         fStartSync = false;
         fGetAddr = false;
-        fRelayTxes = false;
+        fRelayTxes = false; // TODO: reference this again
         hashCheckpointKnown = 0;
         setInventoryKnown.max_size(SendBufferSize() / 1000);
         nPingNonceSent = 0;

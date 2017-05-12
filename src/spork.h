@@ -33,18 +33,18 @@ using namespace boost;
 #define SPORK_12_RECONSIDER_BLOCKS                            10011
 #define SPORK_13_ENABLE_SUPERBLOCKS                           10012
 
-#define SPORK_1_MASTERNODE_PAYMENTS_ENFORCEMENT_DEFAULT       2428537599  //2015-4-8 23:59:59 GMT // NOT USED
-#define SPORK_2_INSTANTX_DEFAULT                              978307200   //2001-1-1 23:59:59 GMT
-#define SPORK_3_INSTANTX_BLOCK_FILTERING_DEFAULT              978307200   //2001-1-1 23:59:59 GMT
-#define SPORK_4_RECONVERGE_DEFAULT                            1451606400  //2016-01-01 // NOT USED
-#define SPORK_5_MAX_VALUE_DEFAULT                             500         //500 INSN 
-#define SPORK_6_REPLAY_BLOCKS_DEFAULT                         0 		  // NOT USED
-#define SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT_DEFAULT        4070908800   //OFF
-#define SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT_DEFAULT         4070908800   //OFF
-#define SPORK_10_MASTERNODE_PAY_UPDATED_NODES_DEFAULT         4070908800   //OFF
-#define SPORK_11_RESET_BUDGET_DEFAULT                         0
-#define SPORK_12_RECONSIDER_BLOCKS_DEFAULT                    0
-#define SPORK_13_ENABLE_SUPERBLOCKS_DEFAULT                   4070908800   //OFF
+#define SPORK_1_MASTERNODE_PAYMENTS_ENFORCEMENT_DEFAULT       4070908800   // OFF
+#define SPORK_2_INSTANTX_DEFAULT                              0            // ON
+#define SPORK_3_INSTANTX_BLOCK_FILTERING_DEFAULT              0            // ON
+#define SPORK_4_RECONVERGE_DEFAULT                            0            // ON - BUT NOT USED
+#define SPORK_5_MAX_VALUE_DEFAULT                             3000000      // 3,000,000 INSN
+#define SPORK_6_REPLAY_BLOCKS_DEFAULT                         0            // ON - BUT NOT USED
+#define SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT_DEFAULT        4070908800   // OFF
+#define SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT_DEFAULT         4070908800   // OFF
+#define SPORK_10_MASTERNODE_PAY_UPDATED_NODES_DEFAULT         4070908800   // OFF
+#define SPORK_11_RESET_BUDGET_DEFAULT                         0            // ON
+#define SPORK_12_RECONSIDER_BLOCKS_DEFAULT                    0            // ON
+#define SPORK_13_ENABLE_SUPERBLOCKS_DEFAULT                   4070908800   // OFF
 
 class CSporkMessage;
 class CSporkManager;
