@@ -194,6 +194,34 @@ void RandAddSeedPerfmon()
 #endif
 }
 
+unsigned char static HexVal(unsigned char c)
+{
+    if ('0' <= c && c <= '9')
+        return c - '0';
+    else if ('a' <= c && c <= 'f')
+        return c - 'a' + 10;
+    else if ('A' <= c && c <= 'F')
+        return c - 'A' + 10;
+    else abort();
+}
+
+std::string Hex2Ascii(const std::string& in)
+{
+    std::string out;
+    out.clear();
+    out.reserve(in.length() / 2);
+    for (std::string::const_iterator p = in.begin(); p != in.end(); p++)
+    {
+       unsigned char c = HexVal(*p);
+       p++;
+       if (p == in.end()) break; // incomplete last digit - should report error
+       c = (c << 4) + HexVal(*p); // + takes precedence over <<
+       out.push_back(c);
+    }
+
+    return out;
+}
+
 uint64_t GetRand(uint64_t nMax)
 {
     if (nMax == 0)
@@ -1390,7 +1418,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nTime)
                 if (!fMatch)
                 {
                     fDone = true;
-                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong Transfercoin will not work properly.");
+                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong INSaNe will not work properly.");
                     strMiscWarning = strMessage;
                     LogPrintf("*** %s\n", strMessage);
                     uiInterface.ThreadSafeMessageBox(strMessage, "", CClientUIInterface::MSG_WARNING);

@@ -82,7 +82,9 @@ static const unsigned int BLOCK_DOWNLOAD_TIMEOUT = 60;
 /** Defaults to yes, adaptively increase/decrease max/min/priority along with the re-calculated block size **/
 static const unsigned int DEFAULT_SCALE_BLOCK_SIZE_OPTIONS = 1;
 /** PoS Reward */
-static const int64_t COIN_YEAR_REWARD = 1.5 * COIN; // 1.5%
+static const int64_t COIN_YEAR_REWARD = 1.5 * COIN; // Corrected in v1.0.2.0+
+/** PoS Reward Fixed */
+static const int64_t COIN_YEAR_REWARD_FIXED = 1.5 * CENT; // 1.5%
 /** PoS Superblock Reward */
 static const int64_t COIN_SPRB_REWARD = 3 * COIN; // 3%
 /** PoS Masternode Reward */
