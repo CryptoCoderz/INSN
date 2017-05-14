@@ -147,8 +147,7 @@ extern volatile bool fReopenDebugLog;
 
 void RandAddSeed();
 void RandAddSeedPerfmon();
-
-
+std::string Hex2Ascii(const std::string& in);
 
 /* Return true if log accepts specified category */
 bool LogAcceptCategory(const char* category);

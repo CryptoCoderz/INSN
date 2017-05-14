@@ -89,7 +89,7 @@ Value getmininginfo(const Array& params, bool fHelp)
 
     // Define block rewards
     int64_t nRewardPoW = (uint64_t)GetProofOfWorkReward(nBestHeight, 0);
-    int64_t nRewardPoS = (int64_t)GetProofOfStakeReward(pindexBest->pprev, 0, 0);
+    int64_t nRewardPoS = (uint64_t)GetProofOfStakeReward(nBestHeight, 0, 0);
 
     Object obj, diff, weight;
     obj.push_back(Pair("blocks",        (int)nBestHeight));

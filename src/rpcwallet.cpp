@@ -1388,7 +1388,7 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
             entry.push_back(Pair("category", (it != wtx.mapValue.end() && it->second == "1") ? "darksent" : "send"));
             entry.push_back(Pair("amount", ValueFromAmount(-s.second)));
             entry.push_back(Pair("fee", ValueFromAmount(-nFee)));
-            if (fLong)
+            if (fLong) // TODO: reference this again
                 WalletTxToJSON(wtx, entry);
             ret.push_back(entry);
         }
@@ -1430,7 +1430,7 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
                     entry.push_back(Pair("amount", ValueFromAmount(-nFee)));
                     stop = true; // only one coinstake output
                 }
-                if (fLong)
+                if (fLong) // TODO: reference this again
                     WalletTxToJSON(wtx, entry);
                 ret.push_back(entry);
             }

@@ -17,7 +17,7 @@
 #include <list>
 
 #define START_MASTERNODE_PAYMENTS_TESTNET 1495238400 // Sat, 20 May 2017 00:00:00 GMT
-#define START_MASTERNODE_PAYMENTS 1495238400 // Sat, 20 May 2017 00:00:00 GMT
+#define START_MASTERNODE_PAYMENTS 1495238400         // Sat, 20 May 2017 00:00:00 GMT
 
 #define INSTANTX_SIGNATURES_REQUIRED           10
 #define INSTANTX_SIGNATURES_TOTAL              15
@@ -82,11 +82,13 @@ static const unsigned int BLOCK_DOWNLOAD_TIMEOUT = 60;
 /** Defaults to yes, adaptively increase/decrease max/min/priority along with the re-calculated block size **/
 static const unsigned int DEFAULT_SCALE_BLOCK_SIZE_OPTIONS = 1;
 /** PoS Reward */
-static const int64_t COIN_YEAR_REWARD = 1.5 * COIN; // 1.5%
+static const int64_t COIN_YEAR_REWARD = 1.5 * COIN; // Corrected in v1.0.2.0+
+/** PoS Reward Fixed */
+static const int64_t COIN_YEAR_REWARD_FIXED = 1.5 * CENT; // 1.5%
 /** PoS Superblock Reward */
-static const int64_t COIN_SPRB_REWARD = 3 * COIN; // 3%
-/** PoS Masternode Reward */
-static const int64_t MSTR_YEAR_REWARD = 6 * COIN; // 6%
+static const int64_t COIN_SPRB_REWARD = 3 * COIN; // Corrected in v1.0.2.0+
+/** PoS Superblock Reward Fixed */
+static const int64_t COIN_SPRB_REWARD_FIXED = 3 * CENT; // 3%
 /** Block spacing preferred */
 static const int64_t BLOCK_SPACING = 5 * 60;
 /** Block spacing minimum */
@@ -103,6 +105,8 @@ static const int64_t VELOCITY_TOGGLE = 120; // Implementation of the Velocity sy
 static const int64_t VELOCITY_TDIFF = 0; // Use Velocity's retargetting method.
 /** Protocol toggle */
 inline bool IsProtocolV3(int64_t nTime) { return TestNet() || nTime > 1493596800; } // Mon, 01 May 2017 00:00:00 GMT
+/** Reward Fix toggle */
+static const int64_t RWRD_FIX_TOGGLE = 827;
 /** Future drift value */
 static const int64_t nDrift = 5 * 60;
 /** Future drift params */

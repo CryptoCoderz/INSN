@@ -9,7 +9,7 @@
 #include "clientversion.h"
 
 //
-// Bootup the masternode, look for a 500 INSN input and register on the network
+// Bootup the masternode, look for a 50,000 INSN input and register on the network
 //
 void CActiveMasternode::ManageStatus()
 {
