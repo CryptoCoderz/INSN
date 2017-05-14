@@ -106,7 +106,7 @@ static const int64_t VELOCITY_TDIFF = 0; // Use Velocity's retargetting method.
 /** Protocol toggle */
 inline bool IsProtocolV3(int64_t nTime) { return TestNet() || nTime > 1493596800; } // Mon, 01 May 2017 00:00:00 GMT
 /** Reward Fix toggle */
-static const int64_t RWRD_FIX_TOGGLE = 1494743400; // Sun, 14 May 2017 06:30:00 GMT
+static const int64_t RWRD_FIX_TOGGLE = 827;
 /** Future drift value */
 static const int64_t nDrift = 5 * 60;
 /** Future drift params */

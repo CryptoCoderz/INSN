@@ -1505,7 +1505,7 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
 
     if(rand1 <= 8000) // 8% Chance of superblock
         nSubsidy = nCoinAge * COIN_SPRB_REWARD * 33 / (365 * 33 + 8);
-    if(GetTime() > RWRD_FIX_TOGGLE) // Correct block reward payouts
+    if(nBestHeight > RWRD_FIX_TOGGLE) // Correct block reward payouts
     {
         nSubsidy = nCoinAge * COIN_YEAR_REWARD_FIXED * 33 / (365 * 33 + 8);
         if(rand1 <= 8000) // 8% Chance of superblock (Fixed)
