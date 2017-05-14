@@ -1475,9 +1475,6 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees)
       nSubsidy = nBlockRewardReserve;
     }
 
-    if(fMasterNode){
-        nSubsidy += 0.06 * COIN; // ~6% addition generation for masternodes
-    }
     if(rand1 <= 8000 && nHeight > nReservePhaseEnd) // 8% Chance of superblock
         nSubsidy = nSuperPoWReward;
 
@@ -1506,13 +1503,14 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
 
     int64_t nSubsidy = nCoinAge * COIN_YEAR_REWARD * 33 / (365 * 33 + 8);
 
-    if(fMasterNode){
-        nSubsidy = nCoinAge * MSTR_YEAR_REWARD * 33 / (365 * 33 + 8); // ~6% addition generation for masternodes
-    }
     if(rand1 <= 8000) // 8% Chance of superblock
         nSubsidy = nCoinAge * COIN_SPRB_REWARD * 33 / (365 * 33 + 8);
-    if(GetTime() > 1497365700) // Correct block reward payouts - set to an obscure date for testing
+    if(GetTime() > RWRD_FIX_TOGGLE) // Correct block reward payouts
+    {
         nSubsidy = nCoinAge * COIN_YEAR_REWARD_FIXED * 33 / (365 * 33 + 8);
+        if(rand1 <= 8000) // 8% Chance of superblock (Fixed)
+            nSubsidy = nCoinAge * COIN_SPRB_REWARD_FIXED * 33 / (365 * 33 + 8);
+    }
 
     // hardCap v2.1
     else if(pindexBest->nMoneySupply > MAX_SINGLE_TX)
