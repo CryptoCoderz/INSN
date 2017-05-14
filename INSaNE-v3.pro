@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = INSaNe-qt
-VERSION = 1.0.3.1
+VERSION = 1.0.3.2
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
