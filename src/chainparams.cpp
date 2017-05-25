@@ -83,8 +83,8 @@ public:
         block.GetHash = 00001f66cb3ba8f5776cb750d621cb3390200580cc39f076b3f61efcf191fba0
         */
         hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x00001f66cb3ba8f5776cb750d621cb3390200580cc39f076b3f61efcf191fba0"));
-        assert(genesis.hashMerkleRoot == uint256("0xe7dba9a3b6015db6a7e3184106c0f813f525b9d4528f36d6f4da0927c9bf0a5f"));
+        assert(hashGenesisBlock == nGenesisBlock);
+        assert(genesis.hashMerkleRoot == nGenesisMerkle);
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,102);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,57);
@@ -93,8 +93,9 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
+        vSeeds.push_back(CDNSSeedData("cryptocoderz.com.1",  "insn.cryptocoderz.com"));
+        vSeeds.push_back(CDNSSeedData("cryptocoderz.com.2",  "insane.cryptocoderz.com"));
         vSeeds.push_back(CDNSSeedData("thecryptochat.net",  "195.74.52.227"));
-        vSeeds.push_back(CDNSSeedData("cryptocoderz.com",  "insane.cryptocoderz.com"));
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
         nPoolMaxTransactions = 3;
@@ -150,7 +151,7 @@ public:
         block.GetHash = 0000ae1d0aaeda3c5554fc4d5192c481d002174e33985bb8c855edd899fd0346
         */
         hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x0000ae1d0aaeda3c5554fc4d5192c481d002174e33985bb8c855edd899fd0346"));
+        assert(hashGenesisBlock == hashTestNetGenesisBlock);
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -194,7 +195,7 @@ public:
         block.nNonce = 8
         block.GetHash = b772ef430a34e04f015ab7a4e4fbe2e882794a83b1dc0056573d74880649d073
         */
-        assert(hashGenesisBlock == uint256("0xb772ef430a34e04f015ab7a4e4fbe2e882794a83b1dc0056573d74880649d073"));
+        assert(hashGenesisBlock == hashRegNetGenesisBlock);
 
         vSeeds.clear();  // Regtest mode doesn't have any DNS seeds.
     }

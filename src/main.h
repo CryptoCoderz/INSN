@@ -89,6 +89,8 @@ static const int64_t COIN_YEAR_REWARD_FIXED = 1.5 * CENT; // 1.5%
 static const int64_t COIN_SPRB_REWARD = 3 * COIN; // Corrected in v1.0.2.0+
 /** PoS Superblock Reward Fixed */
 static const int64_t COIN_SPRB_REWARD_FIXED = 3 * CENT; // 3%
+/** MN Reward Fixed */
+static const int64_t MN_REWARD_FIXED = 9 * CENT; // 9% total, 1.5%/3% for standard net, 7.5%/6% for MNs
 /** Block spacing preferred */
 static const int64_t BLOCK_SPACING = 5 * 60;
 /** Block spacing minimum */
@@ -107,6 +109,8 @@ static const int64_t VELOCITY_TDIFF = 0; // Use Velocity's retargetting method.
 inline bool IsProtocolV3(int64_t nTime) { return TestNet() || nTime > 1493596800; } // Mon, 01 May 2017 00:00:00 GMT
 /** Reward Fix toggle */
 static const int64_t RWRD_FIX_TOGGLE = 827;
+/** MN Reward Fix toggle */
+static const int64_t MN_FIX_TOGGLE = 5500;
 /** Future drift value */
 static const int64_t nDrift = 5 * 60;
 /** Future drift params */
@@ -148,13 +152,13 @@ static const int64_t nReservePhaseStart = 1;
 /** Reserve Phase end block */ 
 static const int64_t nReservePhaseEnd = 12; // 
 /** Main Net Genesis Block */
-static const uint256 nGenesisBlock("0x");
+static const uint256 nGenesisBlock("0x00001f66cb3ba8f5776cb750d621cb3390200580cc39f076b3f61efcf191fba0");
 /** Test Net Genesis Block */
-static const uint256 hashTestNetGenesisBlock("0x");
+static const uint256 hashTestNetGenesisBlock("0x0000ae1d0aaeda3c5554fc4d5192c481d002174e33985bb8c855edd899fd0346");
 /** Reg Net Genesis Block */
-static const uint256 hashRegNetGenesisBlock("0x");
+static const uint256 hashRegNetGenesisBlock("0xb772ef430a34e04f015ab7a4e4fbe2e882794a83b1dc0056573d74880649d073");
 /** Genesis Merkleroot */
-static const uint256 nGenesisMerkle("0x");
+static const uint256 nGenesisMerkle("0xe7dba9a3b6015db6a7e3184106c0f813f525b9d4528f36d6f4da0927c9bf0a5f");
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;

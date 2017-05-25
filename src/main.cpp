@@ -1457,10 +1457,9 @@ int static generateMTRandom(unsigned int s, int range)
     return dist(gen);
 }
 
-// miner's coin base reward
-int64_t GetProofOfWorkReward(int nHeight, int64_t nFees)
+int randreward()
 {
-    // Superblock calculations PoW
+    // Superblock calculations
     uint256 prevHash = 0;
     if(pindexBest->pprev)
         prevHash = pindexBest->pprev->GetBlockHash();
@@ -1468,16 +1467,19 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees)
     const char* cseed = cseed_str.c_str();
     long seed = hex2long(cseed);
     int rand1 = generateMTRandom(seed, 1000000);
+    return rand1;
+}
 
+// miner's coin base reward
+int64_t GetProofOfWorkReward(int nHeight, int64_t nFees)
+{
     int64_t nSubsidy = nBlockPoWReward;
 
     if (nHeight > nReservePhaseStart && nHeight < nReservePhaseEnd) {
       nSubsidy = nBlockRewardReserve;
     }
-
-    if(rand1 <= 8000 && nHeight > nReservePhaseEnd) // 8% Chance of superblock
+    if(randreward() <= 8000 && nHeight > nReservePhaseEnd) // 8% Chance of superblock
         nSubsidy = nSuperPoWReward;
-
     // hardCap v2.1
     else if(pindexBest->nMoneySupply > MAX_SINGLE_TX)
     {
@@ -1492,26 +1494,19 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees)
 // miner's coin stake reward
 int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, int64_t nFees)
 {
-    // Superblock calculations PoS
-    uint256 prevHash = 0;
-    if(pindexBest->pprev)
-        prevHash = pindexBest->pprev->GetBlockHash();
-    std::string cseed_str = prevHash.ToString().substr(7,7);
-    const char* cseed = cseed_str.c_str();
-    long seed = hex2long(cseed);
-    int rand1 = generateMTRandom(seed, 1000000);
-
     int64_t nSubsidy = nCoinAge * COIN_YEAR_REWARD * 33 / (365 * 33 + 8);
 
-    if(rand1 <= 8000) // 8% Chance of superblock
+    if(randreward() <= 8000) // 8% Chance of superblock
         nSubsidy = nCoinAge * COIN_SPRB_REWARD * 33 / (365 * 33 + 8);
     if(nBestHeight > RWRD_FIX_TOGGLE) // Correct block reward payouts
     {
         nSubsidy = nCoinAge * COIN_YEAR_REWARD_FIXED * 33 / (365 * 33 + 8);
-        if(rand1 <= 8000) // 8% Chance of superblock (Fixed)
+        if(randreward() <= 8000) // 8% Chance of superblock (Fixed)
             nSubsidy = nCoinAge * COIN_SPRB_REWARD_FIXED * 33 / (365 * 33 + 8);
+        // Correct subsidy for proper MN allocation
+        if(nBestHeight > MN_FIX_TOGGLE)
+            nSubsidy = nCoinAge * MN_REWARD_FIXED * 33 / (365 * 33 + 8);
     }
-
     // hardCap v2.1
     else if(pindexBest->nMoneySupply > MAX_SINGLE_TX)
     {
@@ -4861,6 +4856,14 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
 int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
 {
     int64_t ret = blockValue * 1/6; // 1/6th
+
+    // Correct MN payout to reflect posted rates
+    if(nHeight > MN_FIX_TOGGLE)
+    {
+        ret = blockValue * 5/6; // 5/6th
+        if(randreward() <= 8000)
+            ret = blockValue * 4/6; // 4/6th
+    }
 
     return ret;
 }
