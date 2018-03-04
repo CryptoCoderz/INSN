@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "base58.h"
+#include "blockparams.h"
 #include "stealth.h"
 #include "smessage.h"
 #include "rpcserver.h"

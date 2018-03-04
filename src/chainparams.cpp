@@ -8,6 +8,7 @@
 #include "chainparams.h"
 #include "main.h"
 #include "util.h"
+#include "base58.h"
 
 #include <boost/assign/list_of.hpp>
 
@@ -70,9 +71,9 @@ public:
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
-        genesis.nTime    = 1493596800; // Mon, 01 May 2017 00:00:00 GMT
+        genesis.nTime    = timeGenesisBlock;
         genesis.nBits    = bnProofOfWorkLimit.GetCompact();
-        genesis.nNonce   = 192744;
+        genesis.nNonce   = nNonceMain;
 
         /** Genesis Block MainNet */
         /*
@@ -138,9 +139,9 @@ public:
         strDataDir = "testnet";
 
         // Modify the testnet genesis block so the timestamp is valid for a later start.
-        genesis.nTime    = 1493596800+30;
+        genesis.nTime    = timeTestNetGenesis;
         genesis.nBits  = bnProofOfWorkLimit.GetCompact();
-        genesis.nNonce = 5925;
+        genesis.nNonce = nNonceTest;
 
         /** Genesis Block TestNet */
         /*
@@ -180,9 +181,9 @@ public:
         pchMessageStart[2] = 0x4f;
         pchMessageStart[3] = 0x3e;
         bnProofOfWorkLimit = CBigNum(~uint256(0) >> 1);
-        genesis.nTime = 1493596800+90;
+        genesis.nTime = timeRegNetGenesis;
         genesis.nBits  = bnProofOfWorkLimit.GetCompact();
-        genesis.nNonce = 8;
+        genesis.nNonce = nNonceReg;
         hashGenesisBlock = genesis.GetHash();
         nDefaultPort = 10300;
         strDataDir = "regtest";
