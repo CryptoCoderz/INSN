@@ -3628,7 +3628,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if(devopaddress.IsValid())
         {
             //spork
-            if(pindexBest->GetBlockTime() > 9993058800) { // OFF (NOT TOGGLED)
+            if(pindexBest->GetBlockTime() > 1520153777) { // OFF (NOT TOGGLED)
                     devpayee = GetScriptForDestination(devopaddress.Get());
             }
             else {
