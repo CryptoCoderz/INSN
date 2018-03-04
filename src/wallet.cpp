@@ -3631,13 +3631,17 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             if(pindexBest->GetBlockTime() > 9993058800) { // OFF (NOT TOGGLED)
                     devpayee = GetScriptForDestination(devopaddress.Get());
             }
+            else {
+                hasdevopsPay = false;
+            }
         }
-        else if(!devopaddress.IsValid())
+        else
         {
             return error("CreateCoinStake: Failed to detect dev address to pay\n");
         }
 
-    } else {
+    }
+    else {
         hasdevopsPay = false;
     }
 
