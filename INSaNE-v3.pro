@@ -339,6 +339,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/plugins/mrichtexteditor/mrichtextedit.h \
     src/qt/qvalidatedtextedit.h \
     src/qt/tradingdialog.h \
+    src/hashalgo/x11/aes_helper.h \
     src/hashalgo/x11/sph_skein.h \
     src/hashalgo/x11/sph_keccak.h \
     src/hashalgo/x11/sph_jh.h \
