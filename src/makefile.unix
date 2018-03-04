@@ -148,6 +148,7 @@ OBJS= \
     obj/kernel.o \
     obj/pbkdf2.o \
     obj/chainparams.o \
+    obj/blockparams.o \
     obj/stealth.o \
     obj/activemasternode.o \
     obj/darksend.o \
