@@ -8,6 +8,7 @@
 #include "protocol.h"
 #include "instantx.h"
 #include "activemasternode.h"
+#include "blockparams.h"
 #include "masternodeman.h"
 #include "darksend.h"
 #include "spork.h"

@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = INSaNe-qt
-VERSION = 1.0.4.0
+VERSION = 1.0.5.1
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
@@ -10,28 +10,36 @@ CONFIG += thread
 CONFIG += widgets
 CONFIG += static
 CONFIG += openssl
+CONFIG += c++11
+
+QMAKE_CXXFLAGS += -fpermissive
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
     DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 }
 
+# WIN32 OS
+# for boost 1.66 on windows, add (MinGW_Version)-mt-s-x32-(Boost_Version)
+# as a reference refer to the below section
+
 win32{
-BOOST_LIB_SUFFIX=-mgw63-mt-s-1_63
-BOOST_INCLUDE_PATH=C:/deps/boost_1_63_0
-BOOST_LIB_PATH=C:/deps/boost_1_63_0/stage/lib
-BDB_INCLUDE_PATH=C:/deps/db-6.2.23.NC/build_unix
-BDB_LIB_PATH=C:/deps/db-6.2.23.NC/build_unix
-OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2k/include
-OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2k
+BOOST_LIB_SUFFIX=-mgw63-mt-s-x32-1_66
+BOOST_INCLUDE_PATH=C:/deps/boost_1_66_0
+BOOST_LIB_PATH=C:/deps/boost_1_66_0/stage/lib
+BDB_INCLUDE_PATH=C:/deps/db-6.2.32.NC/build_unix
+BDB_LIB_PATH=C:/deps/db-6.2.32.NC/build_unix
+OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2n/include
+OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2n
 MINIUPNPC_INCLUDE_PATH=C:/deps/
-MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
+MINIUPNPC_LIB_PATH=C:/deps/miniupnpc-1.9
 QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.4
 QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.4/.libs
 SECP256K1_INCLUDE_PATH=C:/deps/secp256k1/include
 SECP256K1_LIB_PATH=C:/deps/secp256k1
 }
 
+# OTHER OS
 # for boost 1.37, add -mt to the boost libraries
 # use: qmake BOOST_LIB_SUFFIX=-mt
 # for boost thread win32 with _win32 sufix
@@ -219,11 +227,15 @@ HEADERS += src/qt/bitcoingui.h \
     src/addrman.h \
     src/base58.h \
     src/bignum.h \
+    src/blockparams.h \
     src/chainparams.h \
     src/chainparamsseeds.h \
     src/checkpoints.h \
     src/compat.h \
     src/coincontrol.h \
+    src/fork.h \
+    src/genesis.h \
+    src/mining.h \
     src/sync.h \
     src/util.h \
     src/hash.h \
@@ -327,18 +339,19 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/plugins/mrichtexteditor/mrichtextedit.h \
     src/qt/qvalidatedtextedit.h \
     src/qt/tradingdialog.h \
-    src/sph_skein.h \
-    src/sph_keccak.h \
-    src/sph_jh.h \
-    src/sph_groestl.h \
-    src/sph_bmw.h \
-    src/sph_types.h \
-    src/sph_luffa.h \
-    src/sph_cubehash.h \
-    src/sph_echo.h \
-    src/sph_shavite.h \
-    src/sph_simd.h \
-    src/sph_types.h \
+    src/hashalgo/x11/aes_helper.h \
+    src/hashalgo/x11/sph_skein.h \
+    src/hashalgo/x11/sph_keccak.h \
+    src/hashalgo/x11/sph_jh.h \
+    src/hashalgo/x11/sph_groestl.h \
+    src/hashalgo/x11/sph_bmw.h \
+    src/hashalgo/x11/sph_types.h \
+    src/hashalgo/x11/sph_luffa.h \
+    src/hashalgo/x11/sph_cubehash.h \
+    src/hashalgo/x11/sph_echo.h \
+    src/hashalgo/x11/sph_shavite.h \
+    src/hashalgo/x11/sph_simd.h \
+    src/hashalgo/x11/sph_types.h \
     src/limitedmap.h
 
 SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
@@ -357,6 +370,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/blocksizecalculator.cpp \
     src/allocators.cpp \
     src/base58.cpp \
+    src/blockparams.cpp \
     src/chainparams.cpp \
     src/version.cpp \
     src/velocity.cpp \
@@ -455,17 +469,17 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/plugins/mrichtexteditor/mrichtextedit.cpp \
     src/qt/tradingdialog.cpp \
     src/rpcsmessage.cpp \
-    src/blake.c \
-    src/bmw.c \
-    src/groestl.c \
-    src/jh.c \
-    src/keccak.c \
-    src/skein.c \
-    src/luffa.c \
-    src/cubehash.c \
-    src/shavite.c \
-    src/echo.c \
-    src/simd.c
+    src/hashalgo/x11/blake.c \
+    src/hashalgo/x11/bmw.c \
+    src/hashalgo/x11/groestl.c \
+    src/hashalgo/x11/jh.c \
+    src/hashalgo/x11/keccak.c \
+    src/hashalgo/x11/skein.c \
+    src/hashalgo/x11/luffa.c \
+    src/hashalgo/x11/cubehash.c \
+    src/hashalgo/x11/shavite.c \
+    src/hashalgo/x11/echo.c \
+    src/hashalgo/x11/simd.c
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -645,7 +659,8 @@ windows:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32
     LIBS += -lgmp -levent
 }
 LIBS += -lboost_system$$BOOST_LIB_SUFFIX -lboost_filesystem$$BOOST_LIB_SUFFIX -lboost_program_options$$BOOST_LIB_SUFFIX -lboost_thread$$BOOST_THREAD_LIB_SUFFIX
-windows:LIBS += -lboost_chrono$$BOOST_LIB_SUFFIX
+!windows:LIBS += -lboost_system$$BOOST_LIB_SUFFIX -lboost_filesystem$$BOOST_LIB_SUFFIX
+windows:LIBS += libboost_chrono$$BOOST_LIB_SUFFIX
 
 contains(RELEASE, 1) {
     !windows:!macx {
