@@ -218,13 +218,13 @@ void VRX_BaseEngine(const CBlockIndex* pindexLast, bool fProofOfStake)
            // Log hybrid block type
            //
            // v1.0
-           if(pindexBest->GetBlockTime() < 1520198278) // OFF (NOT TOGGLED)
+           if(pindexBest->GetBlockTime() < 1521288000)  // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
            {
                 if     (fProofOfStake) prevPoS ++;
                 else if(!fProofOfStake) prevPoW ++;
            }
            // v1.1
-           if(pindexBest->GetBlockTime() > 1520198278) // OFF (NOT TOGGLED)
+           if(pindexBest->GetBlockTime() > 1521288000)  // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
            {
                if(pindexPrev->IsProofOfStake())
                {
@@ -262,7 +262,7 @@ void VRX_ThreadCurve(const CBlockIndex* pindexLast, bool fProofOfStake)
 
     // Version 1.1 curve-patch
     //
-    if(pindexBest->GetBlockTime() > 1520198278) // OFF (NOT TOGGLED)
+    if(pindexBest->GetBlockTime() > 1521288000)  // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
     {
         // Define time values
         cntTime = BlockVelocityType->GetBlockTime();
@@ -403,7 +403,7 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees)
     }
     if(randreward() <= 8000 && nHeight > nReservePhaseEnd) // 8% Chance of superblock
         nSubsidy *= nSuperModifier; // x2
-    if(pindexBest->GetBlockTime() > 1520198278) // OFF (NOT TOGGLED)
+    if(pindexBest->GetBlockTime() > 1521288000)  // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
     {
         nSubsidy = nBlockPoWReward_2; // 5.5
 
@@ -439,7 +439,7 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
         // Correct subsidy for proper MN allocation
         if(nBestHeight > MN_FIX_TOGGLE)
             nSubsidy = nCoinAge * MN_REWARD_FIXED * 33 / (365 * 33 + 8);
-        if(pindexBest->GetBlockTime() > 1520198278) // OFF (NOT TOGGLED)
+        if(pindexBest->GetBlockTime() > 1521288000)  // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
         {
             nSubsidy = STATIC_POS_REWARD;
             if(randreward() <= 8000) // 8% Chance of superblock
@@ -465,7 +465,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
 {
     int64_t ret = 1 * COIN;
 
-    if(pindexBest->GetBlockTime() < 1520198278) // OFF (NOT TOGGLED)
+    if(pindexBest->GetBlockTime() < 1521288000)  // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
     {
         ret = blockValue * 1/6; // 1/6th
 
@@ -477,7 +477,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
                 ret = blockValue * 4/6; // 4/6th
         }
     }
-    else if(pindexBest->GetBlockTime() > 1520198278) // OFF (NOT TOGGLED)
+    else if(pindexBest->GetBlockTime() > 1521288000)  // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
     {
         ret = (blockValue * 85) / 100; // 85%
     }
