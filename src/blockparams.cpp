@@ -310,10 +310,6 @@ unsigned int VRX_Retarget(const CBlockIndex* pindexLast, bool fProofOfStake)
     if (pindexLast->nHeight < scanheight+114)
         return bnVelocity.GetCompact(); // can't index prevblock
 
-    // TODO: Remove (used for testing)
-    if (pindexLast->nHeight >= 46507 && pindexLast->nHeight < 46550)
-        return bnVelocity.GetCompact(); // reset dif
-
     // Differentiate PoW/PoS prev block
     BlockVelocityType = GetLastBlockIndex(pindexLast, fProofOfStake);
 
