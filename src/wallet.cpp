@@ -32,6 +32,7 @@ using namespace std;
 int64_t nTransactionFee = MIN_TX_FEE;
 int64_t nReserveBalance = 0;
 int64_t nMinimumInputValue = 0;
+int64_t nPoSageReward = 0;
 
 static int64_t GetStakeCombineThreshold() { return 100 * COIN; }
 static int64_t GetStakeSplitThreshold() { return 2 * GetStakeCombineThreshold(); }
@@ -3532,6 +3533,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     CScript payee;
     CScript devpayee;
     CTxIn vin;
+    nPoSageReward = nReward;
 
     // Masternode Payments
     int payments = 1;

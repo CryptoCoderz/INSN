@@ -17,10 +17,10 @@ Specifications and General info
 ------------------
 INSaNe uses libsecp256k1,
 			  libgmp,
-			  Boost1.66,
-			  OR Boost1.58,  
-			  Openssl1.02n,
-			  Berkeley DB 6.2.32,
+			  Boost1.63,
+			  OR Boost1.57,  
+			  Openssl1.02k,
+			  Berkeley DB 6.2.23,
 			  QT5.8 to compile
 
 

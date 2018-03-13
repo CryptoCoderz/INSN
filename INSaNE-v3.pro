@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = INSaNe-qt
-VERSION = 1.0.5.1
+VERSION = 1.0.5.2
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
@@ -339,7 +339,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/plugins/mrichtexteditor/mrichtextedit.h \
     src/qt/qvalidatedtextedit.h \
     src/qt/tradingdialog.h \
-    src/hashalgo/x11/aes_helper.h \
     src/hashalgo/x11/sph_skein.h \
     src/hashalgo/x11/sph_keccak.h \
     src/hashalgo/x11/sph_jh.h \
@@ -469,6 +468,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/plugins/mrichtexteditor/mrichtextedit.cpp \
     src/qt/tradingdialog.cpp \
     src/rpcsmessage.cpp \
+    src/hashalgo/x11/aes_helper.c \
     src/hashalgo/x11/blake.c \
     src/hashalgo/x11/bmw.c \
     src/hashalgo/x11/groestl.c \

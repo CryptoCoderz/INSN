@@ -2485,11 +2485,6 @@ bool CBlock::AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos, const u
         hashPrevBestCoinBase = vtx[0].GetHash();
     }
 
-
-
-
-
-
     return true;
 }
 
@@ -2529,6 +2524,85 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         for (unsigned int i = 2; i < vtx.size(); i++)
             if (vtx[i].IsCoinStake())
                 return DoS(100, error("CheckBlock() : more than one coinstake"));
+
+        // Verify coin stake tx includes devops payment -
+        // first check for start of devops payments
+        bool bDevOpsPayment = false;
+
+        if ( Params().NetworkID() == CChainParams::TESTNET ){
+            if (GetTime() > START_DEVOPS_PAYMENTS_TESTNET ){
+                bDevOpsPayment = true;
+            }
+        }else{
+            if (GetTime() > START_DEVOPS_PAYMENTS){
+                bDevOpsPayment = true;
+            }
+        }
+        // stop devops payments (for testing)
+        if ( Params().NetworkID() == CChainParams::TESTNET ){
+            if (GetTime() > STOP_DEVOPS_PAYMENTS_TESTNET ){
+                bDevOpsPayment = false;
+            }
+        }else{
+            if (GetTime() > STOP_DEVOPS_PAYMENTS){
+                bDevOpsPayment = false;
+            }
+        }
+        if(bDevOpsPayment) {
+            LOCK2(cs_main, mempool.cs);
+
+            CBlockIndex *pindex = pindexBest;
+            if(pindex != NULL){
+                if(pindex->GetBlockHash() == hashPrevBlock){
+                    // If we don't already have its previous block, skip devops payment step
+                    // TODO: elaborate on payment catch, currently unused and throws warning
+                    CAmount blockPayment;
+                    for (int i = vtx[1].vout.size(); i--> 0; ) {
+                        blockPayment = vtx[1].vout[i].nValue;
+                        break;
+                    }
+
+            // Set values
+            CBitcoinAddress devopaddress;
+            CScript devpayee;
+            if (Params().NetworkID() == CChainParams::MAIN)
+                devopaddress = CBitcoinAddress("i9ByhsYAV2A9A67MsyjWpEjPx3VCkVCLwr");
+
+            int64_t devopsPayment = GetDevOpsPayment(pindexBest->nHeight+1, nPoSageReward);
+            bool foundDevOpspayment = false;
+            bool foundDevOpspayee = false;
+
+            // verify address
+            if(devopaddress.IsValid())
+            {
+                //spork
+                if(pindexBest->GetBlockTime() > 1521288000) { // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
+                        devpayee = GetScriptForDestination(devopaddress.Get());
+                }
+                else {
+                    foundDevOpspayment = true;
+                    foundDevOpspayee = true;
+                }
+            }
+            else {
+                return DoS(100, error("CheckBlock() : coinstake failed to include devops recipient"));
+            }
+            // Search for devops payment
+            for (unsigned int i = 0; i < vtx[1].vout.size(); i++) {
+                if(vtx[1].vout[i].nValue == devopsPayment )
+                    foundDevOpspayment = true;
+                if(vtx[1].vout[i].scriptPubKey == devpayee )
+                    foundDevOpspayee = true;
+            }
+
+            // velocity: reject if illogical
+            if (!foundDevOpspayment)
+                return DoS(100, error("CheckBlock() : coinstake failed to include devops payment"));
+            if (!foundDevOpspayee)
+                return DoS(100, error("CheckBlock() : coinstake failed to include devops recipient"));
+        }
+       }
+      }
     }
 
     // Check proof-of-stake block signature
@@ -2574,11 +2648,13 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
             if(IsProofOfStake() && pindex != NULL){
                 if(pindex->GetBlockHash() == hashPrevBlock){
                     // If we don't already have its previous block, skip masternode payment step
+                    // TODO: elaborate on payment catch, currently unused and throws warning
                     CAmount masternodePaymentAmount;
                     for (int i = vtx[1].vout.size(); i--> 0; ) {
                         masternodePaymentAmount = vtx[1].vout[i].nValue;
                         break;
                     }
+                    int64_t definedMNpaymentAmount = GetMasternodePayment(pindexBest->nHeight+1, nPoSageReward);
                     bool foundPaymentAmount = false;
                     bool foundPayee = false;
                     bool foundPaymentAndPayee = false;
@@ -2593,11 +2669,11 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
                     }
 
                     for (unsigned int i = 0; i < vtx[1].vout.size(); i++) {
-                        if(vtx[1].vout[i].nValue == masternodePaymentAmount )
+                        if(vtx[1].vout[i].nValue == definedMNpaymentAmount )
                             foundPaymentAmount = true;
                         if(vtx[1].vout[i].scriptPubKey == payee )
                             foundPayee = true;
-                        if(vtx[1].vout[i].nValue == masternodePaymentAmount && vtx[1].vout[i].scriptPubKey == payee)
+                        if(vtx[1].vout[i].nValue == definedMNpaymentAmount && vtx[1].vout[i].scriptPubKey == payee)
                             foundPaymentAndPayee = true;
                     }
 
@@ -2606,10 +2682,10 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
                     CINSaNeAddress address2(address1);
 
                     if(!foundPaymentAndPayee) {
-                        if(fDebug) { LogPrintf("CheckBlock() : Couldn't find masternode payment(%d|%d) or payee(%d|%s) nHeight %d. \n", foundPaymentAmount, masternodePaymentAmount, foundPayee, address2.ToString().c_str(), pindexBest->nHeight+1); }
+                        if(fDebug) { LogPrintf("CheckBlock() : Couldn't find masternode payment(%d|%d) or payee(%d|%s) nHeight %d. \n", foundPaymentAmount, definedMNpaymentAmount, foundPayee, address2.ToString().c_str(), pindexBest->nHeight+1); }
                         return DoS(100, error("CheckBlock() : Couldn't find masternode payment or payee"));
                     } else {
-                        LogPrintf("CheckBlock() : Found payment(%d|%d) or payee(%d|%s) nHeight %d. \n", foundPaymentAmount, masternodePaymentAmount, foundPayee, address2.ToString().c_str(), pindexBest->nHeight+1);
+                        LogPrintf("CheckBlock() : Found payment(%d|%d) or payee(%d|%s) nHeight %d. \n", foundPaymentAmount, definedMNpaymentAmount, foundPayee, address2.ToString().c_str(), pindexBest->nHeight+1);
                     }
                 } else {
                     if(fDebug) { LogPrintf("CheckBlock() : Skipping masternode payment check - nHeight %d Hash %s\n", pindexBest->nHeight+1, GetHash().ToString().c_str()); }

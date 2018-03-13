@@ -22,6 +22,7 @@
 #include "stealth.h"
 
 // Settings
+extern int64_t nPoSageReward;
 extern int64_t nTransactionFee;
 extern int64_t nReserveBalance;
 extern int64_t nMinimumInputValue;
