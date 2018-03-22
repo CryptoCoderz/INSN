@@ -2548,8 +2548,13 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
                 bDevOpsPayment = false;
             }
         }
-        if(bDevOpsPayment) {
-            LOCK2(cs_main, mempool.cs);
+
+        bool fIsInitialDownload = IsInitialBlockDownload();
+        if (!fIsInitialDownload)
+        {
+            if(bDevOpsPayment)
+            {
+                LOCK2(cs_main, mempool.cs);
 
             CBlockIndex *pindex = pindexBest;
             if(pindex != NULL){
@@ -2603,6 +2608,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         }
        }
       }
+     }
     }
 
     // Check proof-of-stake block signature
