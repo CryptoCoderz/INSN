@@ -2552,7 +2552,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         bool fIsInitialDownload = IsInitialBlockDownload();
         if (!fIsInitialDownload)
         {
-            if(bDevOpsPayment)
+            if(bDevOpsPayment && Params().NetworkID() == CChainParams::TESTNET)
             {
                 LOCK2(cs_main, mempool.cs);
 

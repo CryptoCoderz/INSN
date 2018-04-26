@@ -30,7 +30,7 @@ static const int DATABASE_VERSION = 70509;
 //
 // network protocol versioning
 //
-static const int PROTOCOL_VERSION = 62009;
+static const int PROTOCOL_VERSION = 62010;
 
 // intial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -57,7 +57,7 @@ static const int NOBLKS_VERSION_START = 0;
 static const int NOBLKS_VERSION_END = 62004;
 
 // hard cutoff time for legacy network connections
-static const int64_t HRD_LEGACY_CUTOFF = 1521288000;  // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
+static const int64_t HRD_LEGACY_CUTOFF = 1529980500;  // ON (Tue, 26 Jun 2018 02:35:00 GMT)
 
 // hard cutoff time for future network connections
 static const int64_t HRD_FUTURE_CUTOFF = 9993058800; // OFF (NOT TOGGLED)
