@@ -316,6 +316,11 @@ unsigned int VRX_Retarget(const CBlockIndex* pindexLast, bool fProofOfStake)
             return bnVelocity.GetCompact();
     }
 
+    // Allow for single block difficulty reset for reward redux updates
+    // ((5 * 60) * 5000) / 60 / 60 / 24 = 17.3611111111 days until fork
+    if (pindexLast->nHeight == 78768) // Height of set: 73768
+        return bnVelocity.GetCompact(); // reset diff for update fork
+
     // Differentiate PoW/PoS prev block
     BlockVelocityType = GetLastBlockIndex(pindexLast, fProofOfStake);
 
@@ -411,8 +416,10 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees)
 
         if(randreward() <= 20000 && nHeight > nReservePhaseEnd) // 20% Chance of superblock
             nSubsidy *= nSuperModifier; // x2
-        if(pindexBest->GetBlockTime() > 1521547200)  // ON (Sat, 20 Mar 2018 05:00:00 GMT-07:00)
-            nSubsidy *= 10;
+        if(pindexBest->GetBlockTime() < RWRD_REDUX_TOGGLE){
+            if(pindexBest->GetBlockTime() > 1521547200)  // ON (Sat, 20 Mar 2018 05:00:00 GMT-07:00)
+                nSubsidy *= 10;
+        }
     }
 
     // hardCap v2.1
@@ -448,8 +455,10 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
             nSubsidy = STATIC_POS_REWARD;
             if(randreward() <= 8000) // 8% Chance of superblock
                 nSubsidy = (STATIC_POS_REWARD * STATIC_POS_MULTIPLIER) / 100;
-            if(pindexBest->GetBlockTime() > 1521547200)  // ON (Sat, 20 Mar 2018 05:00:00 GMT-07:00)
-                nSubsidy *= 10;
+            if(pindexBest->GetBlockTime() < RWRD_REDUX_TOGGLE){
+                if(pindexBest->GetBlockTime() > 1521547200)  // ON (Sat, 20 Mar 2018 05:00:00 GMT-07:00)
+                    nSubsidy *= 10;
+            }
         }
     }
 

@@ -18,6 +18,8 @@ static const int64_t VELOCITY_TOGGLE = 120; // Implementation of the Velocity sy
 static const int64_t VELOCITY_TDIFF = 0; // Use Velocity's retargetting method.
 /** Protocol toggle */
 inline bool IsProtocolV3(int64_t nTime) { return TestNet() || nTime > 1493596800; } // Mon, 01 May 2017 00:00:00 GMT
+/** Reward Redux toggle */
+static const int64_t RWRD_REDUX_TOGGLE = 1535486400; // Tuesday, August 28, 2018 8:00:00 PM
 /** Reward Fix toggle */
 static const int64_t RWRD_FIX_TOGGLE = 827;
 /** MN Reward Fix toggle */
