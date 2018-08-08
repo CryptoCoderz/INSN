@@ -1,10 +1,31 @@
 #ifndef OVERVIEWPAGE_H
 #define OVERVIEWPAGE_H
 
+#include <QWidget>
+
+#include "clientmodel.h"
+#include "main.h"
+#include "wallet.h"
+#include "base58.h"
+
 #include "util.h"
 
-#include <QTimer>
 #include <QWidget>
+#include <QDir>
+#include <QFile>
+#include <QProcess>
+#include <QTime>
+#include <QTimer>
+#include <QStringList>
+#include <QMap>
+#include <QSettings>
+#include <QSlider>
+
+double getPoSHardness(int);
+double convertPoSCoins(int64_t);
+int getPoSTime(int);
+int PoSInPastHours(int);
+const CBlockIndex* getPoSIndex(int);
 
 class ClientModel;
 class WalletModel;
@@ -36,6 +57,9 @@ public:
 public slots:
     void darkSendStatus();
     void setBalance(const CAmount& balance, const CAmount& stake, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& anonymizedBalance, const CAmount& watchOnlyBalance, const CAmount& watchOnlyStake, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void updatePoSstat(bool);
+    void setCntBlocks(int pseudo);
+    void setCntConnections(int count);
 
 signals:
     void transactionClicked(const QModelIndex &index);

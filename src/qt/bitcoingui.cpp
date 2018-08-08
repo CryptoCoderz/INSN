@@ -95,7 +95,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     prevBlocks(0),
     nWeight(0)
 {
-    resize(900, 520);
+    resize(900, 604);
     setWindowTitle(tr("INSaNe") + " - " + tr("Wallet"));
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(":icons/bitcoin"));
@@ -139,8 +139,9 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 
     sendCoinsPage = new SendCoinsDialog(this);
 
-    tradingDialogPage = new tradingDialog(this);
-    tradingDialogPage->setObjectName("tradingDialog");
+    // TODO: update for different exchange and re-enable
+    //tradingDialogPage = new tradingDialog(this);
+    //tradingDialogPage->setObjectName("tradingDialog");
 
     signVerifyMessageDialog = new SignVerifyMessageDialog(this);
 
@@ -157,7 +158,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     centralStackedWidget->addWidget(masternodeManagerPage);
     centralStackedWidget->addWidget(messagePage);
     centralStackedWidget->addWidget(blockBrowser);
-    centralStackedWidget->addWidget(tradingDialogPage);
+    // TODO: update for different exchange and re-enable
+    //centralStackedWidget->addWidget(tradingDialogPage);
 
     QWidget *centralWidget = new QWidget();
     QVBoxLayout *centralLayout = new QVBoxLayout(centralWidget);
@@ -187,17 +189,18 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     labelConnectionsIcon = new QLabel();
     labelBlocksIcon = new QLabel();
     frameBlocksLayout->addWidget(netLabel);
-    //frameBlocksLayout->addStretch();
+    frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelEncryptionIcon);
-    //frameBlocksLayout->addStretch();
+    frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelStakingIcon);
-    //frameBlocksLayout->addStretch();
+    frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelConnectionsIcon);
-    //frameBlocksLayout->addStretch();
+    frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelBlocksIcon);
-    //frameBlocksLayout->addStretch();
+    frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(netLabel);
-    //frameBlocksLayout->addStretch();
+    frameBlocksLayout->addStretch();
+    toolbar->addWidget(frameBlocks);
 
 
     if (GetBoolArg("-staking", true))
@@ -209,29 +212,29 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     }
 
     // Progress bar and label for blocks download
-    progressBarLabel = new QLabel();
-    progressBarLabel->setVisible(false);
-    progressBar = new QProgressBar();
-    progressBar->setAlignment(Qt::AlignCenter);
-    progressBar->setVisible(false);
+    //progressBarLabel = new QLabel();
+    //progressBarLabel->setVisible(false);
+    //progressBar = new QProgressBar();
+    //progressBar->setAlignment(Qt::AlignCenter);
+    //progressBar->setVisible(false);
 
     if (!fUseBlackTheme)
     {
         // Override style sheet for progress bar for styles that have a segmented progress bar,
         // as they make the text unreadable (workaround for issue #1071)
         // See https://qt-project.org/doc/qt-4.8/gallery.html
-        QString curStyle = qApp->style()->metaObject()->className();
-        if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
-        {
-            progressBar->setStyleSheet("QProgressBar { color: #ffffff;background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
-        }
+        //QString curStyle = qApp->style()->metaObject()->className();
+        //if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
+        //{
+        //    progressBar->setStyleSheet("QProgressBar { color: #ffffff;background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
+        //}
     }
 
-    statusBar()->addWidget(progressBarLabel);
-    statusBar()->addWidget(progressBar);
-    statusBar()->addPermanentWidget(frameBlocks);
-    statusBar()->setObjectName("statusBar");
-    statusBar()->setStyleSheet("#statusBar { color: #ffffff; background-color: qradialgradient(cx: -0.8, cy: 0, fx: -0.8, fy: 0, radius: 0.6, stop: 0 #1690ca, stop: 1 #127fb3);  }");
+    //statusBar()->addWidget(progressBarLabel);
+    //statusBar()->addWidget(progressBar);
+    //statusBar()->addPermanentWidget(frameBlocks);
+    //statusBar()->setObjectName("statusBar");
+    //statusBar()->setStyleSheet("#statusBar { color: #ffffff; background-color: qradialgradient(cx: -0.8, cy: 0, fx: -0.8, fy: 0, radius: 0.6, stop: 0 #1690ca, stop: 1 #127fb3);  }");
 
     syncIconMovie = new QMovie(fUseBlackTheme ? ":/movies/update_spinner_black" : ":/movies/update_spinner", "mng", this);
 
@@ -239,7 +242,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
 
-    connect(TradingAction, SIGNAL(triggered()), tradingDialogPage, SLOT(InitTrading()));
+    // TODO: update for different exchange and re-enable
+    //connect(TradingAction, SIGNAL(triggered()), tradingDialogPage, SLOT(InitTrading()));
 
     // Double-clicking on a transaction on the transaction history page shows details
     connect(transactionView, SIGNAL(doubleClicked(QModelIndex)), transactionView, SLOT(showDetails()));
@@ -320,17 +324,19 @@ void BitcoinGUI::createActions()
     blockAction->setCheckable(true);
     tabGroup->addAction(blockAction);
 
-    TradingAction = new QAction(QIcon(":/icons/trade"), tr("&Bittrex"), this);
-    TradingAction ->setToolTip(tr("Start Trading"));
-    TradingAction ->setCheckable(true);
-    TradingAction ->setShortcut(QKeySequence(Qt::ALT + Qt::Key_8));
-    TradingAction->setProperty("objectName","TradingAction");
-    tabGroup->addAction(TradingAction);
+    // TODO: update for different exchange and re-enable
+    //TradingAction = new QAction(QIcon(":/icons/trade"), tr("&Bittrex"), this);
+    //TradingAction ->setToolTip(tr("Start Trading"));
+    //TradingAction ->setCheckable(true);
+    //TradingAction ->setShortcut(QKeySequence(Qt::ALT + Qt::Key_8));
+    //TradingAction->setProperty("objectName","TradingAction");
+    //tabGroup->addAction(TradingAction);
 
     showBackupsAction = new QAction(QIcon(":/icons/browse"), tr("Show Auto&Backups"), this);
     showBackupsAction->setStatusTip(tr("S"));
 
-    connect(TradingAction, SIGNAL(triggered()), this, SLOT(gotoTradingPage()));
+    // TODO: update for different exchange and re-enable
+    //connect(TradingAction, SIGNAL(triggered()), this, SLOT(gotoTradingPage()));
     connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
@@ -442,7 +448,7 @@ void BitcoinGUI::createToolBars()
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
     toolbar->setObjectName("tabs");
-    toolbar->setStyleSheet("QToolButton { color: #505050; font-weight:bold;} QToolButton:hover { background-color: #909090 } QToolButton:checked { background-color: #f1f1f1 } QToolButton:pressed { background-color: #101010 } #tabs { color: #505050; background-color: #ffffff; }");
+    toolbar->setStyleSheet("QToolButton { color: #a2dbf6; font-weight:bold;} QToolButton:hover { background-color: #909090 } QToolButton:checked { background-color: #f1f1f1 } QToolButton:pressed { background-color: #101010 } #tabs { color: #a2dbf6; background-color: qradialgradient(cx: -0.8, cy: 0, fx: -0.8, fy: 0, radius: 0.6, stop: 0 #1690ca, stop: 1 #127fb3); }");
     toolbar->setIconSize(QSize(24,24));
 
     QLabel* header = new QLabel();
@@ -463,13 +469,16 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(messageAction);
     }
     toolbar->addAction(blockAction);
-    toolbar->addAction(TradingAction);
-    netLabel = new QLabel();
+    // TODO: update for different exchange and re-enable
+    //toolbar->addAction(TradingAction);
 
     QWidget *spacer = makeToolBarSpacer();
+
+    netLabel = new QLabel();
     netLabel->setObjectName("netLabel");
     netLabel->setStyleSheet("#netLabel { color: #efefef; }");
     toolbar->addWidget(spacer);
+
     toolbar->setOrientation(Qt::Vertical);
     toolbar->setMovable(false);
 
@@ -524,8 +533,8 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
         connect(clientModel, SIGNAL(message(QString,QString,bool,unsigned int)), this, SLOT(message(QString,QString,bool,unsigned int)));
 
         // Show progress dialog
-        connect(clientModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
-        connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
+        //connect(clientModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
+        //connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
 
         overviewPage->setClientModel(clientModel);
         rpcConsole->setClientModel(clientModel);
@@ -551,7 +560,8 @@ void BitcoinGUI::setWalletModel(WalletModel *walletModel)
         sendCoinsPage->setModel(walletModel);
         signVerifyMessageDialog->setModel(walletModel);
         blockBrowser->setModel(walletModel);
-        tradingDialogPage->setModel(walletModel);
+        // TODO: update for different exchange and re-enable
+        //tradingDialogPage->setModel(walletModel);
 
         setEncryptionStatus(walletModel->getEncryptionStatus());
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SLOT(setEncryptionStatus(int)));
@@ -665,11 +675,19 @@ void BitcoinGUI::setNumConnections(int count)
 
 void BitcoinGUI::setNumBlocks(int count)
 {
+    // don't show / hide progress bar and its label if we have no connection to the network
+    if (!clientModel || (clientModel->getNumConnections() == 0 && !clientModel->isImporting()))
+    {
+        statusBar()->setVisible(false);
+        return;
+    }
+
+    bool fShowStatusBar = false;
     QString tooltip;
 
     QDateTime lastBlockDate = clientModel->getLastBlockDate();
     QDateTime currentDate = QDateTime::currentDateTime();
-    int totalSecs = GetTime() - Params().GenesisBlock().GetBlockTime();
+    //int totalSecs = GetTime() - Params().GenesisBlock().GetBlockTime();
     int secs = lastBlockDate.secsTo(currentDate);
 
     tooltip = tr("Processed %1 blocks of transaction history.").arg(count);
@@ -682,66 +700,68 @@ void BitcoinGUI::setNumBlocks(int count)
 
         overviewPage->showOutOfSyncWarning(false);
 
-        progressBarLabel->setVisible(false);
-        progressBar->setVisible(false);
+        //progressBarLabel->setVisible(false);
+        //progressBar->setVisible(false);
     }
     else
     {
         // Represent time from last generated block in human readable text
-        QString timeBehindText;
-        const int HOUR_IN_SECONDS = 60*60;
-        const int DAY_IN_SECONDS = 24*60*60;
-        const int WEEK_IN_SECONDS = 7*24*60*60;
-        const int YEAR_IN_SECONDS = 31556952; // Average length of year in Gregorian calendar
-        if(secs < 2*DAY_IN_SECONDS)
-        {
-            timeBehindText = tr("%n hour(s)","",secs/HOUR_IN_SECONDS);
-        }
-        else if(secs < 2*WEEK_IN_SECONDS)
-        {
-            timeBehindText = tr("%n day(s)","",secs/DAY_IN_SECONDS);
-        }
-        else if(secs < YEAR_IN_SECONDS)
-        {
-            timeBehindText = tr("%n week(s)","",secs/WEEK_IN_SECONDS);
-        }
-        else
-        {
-            int years = secs / YEAR_IN_SECONDS;
-            int remainder = secs % YEAR_IN_SECONDS;
-            timeBehindText = tr("%1 and %2").arg(tr("%n year(s)", "", years)).arg(tr("%n week(s)","", remainder/WEEK_IN_SECONDS));
-        }
+        //QString timeBehindText;
+        //const int HOUR_IN_SECONDS = 60*60;
+        //const int DAY_IN_SECONDS = 24*60*60;
+        //const int WEEK_IN_SECONDS = 7*24*60*60;
+        //const int YEAR_IN_SECONDS = 31556952; // Average length of year in Gregorian calendar
+        //if(secs < 2*DAY_IN_SECONDS)
+        //{
+        //    timeBehindText = tr("%n hour(s)","",secs/HOUR_IN_SECONDS);
+        //}
+        //else if(secs < 2*WEEK_IN_SECONDS)
+        //{
+        //    timeBehindText = tr("%n day(s)","",secs/DAY_IN_SECONDS);
+        //}
+        //else if(secs < YEAR_IN_SECONDS)
+        //{
+        //    timeBehindText = tr("%n week(s)","",secs/WEEK_IN_SECONDS);
+        //}
+        //else
+        //{
+        //    int years = secs / YEAR_IN_SECONDS;
+        //    int remainder = secs % YEAR_IN_SECONDS;
+        //    timeBehindText = tr("%1 and %2").arg(tr("%n year(s)", "", years)).arg(tr("%n week(s)","", remainder/WEEK_IN_SECONDS));
+        //}
 
-        progressBarLabel->setText(tr(clientModel->isImporting() ? "Importing blocks..." : "Synchronizing with network..."));
-        progressBarLabel->setVisible(true);
-        progressBarLabel->setStyleSheet("QLabel { color: #ffffff; }");
-        progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
-        progressBar->setMaximum(totalSecs);
-        progressBar->setValue(totalSecs - secs);
-        progressBar->setVisible(true);
+        //progressBarLabel->setText(tr(clientModel->isImporting() ? "Importing blocks..." : "Synchronizing with network..."));
+        //progressBarLabel->setVisible(true);
+        //progressBarLabel->setStyleSheet("QLabel { color: #ffffff; }");
+        //progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
+        //progressBar->setMaximum(totalSecs);
+        //progressBar->setValue(totalSecs - secs);
+        //progressBar->setVisible(true);
 
-        tooltip = tr("Catching up...") + QString("<br>") + tooltip;
-        labelBlocksIcon->setMovie(syncIconMovie);
-        if(count != prevBlocks)
-            syncIconMovie->jumpToNextFrame();
-        prevBlocks = count;
+        //tooltip = tr("Catching up...") + QString("<br>") + tooltip;
+        //labelBlocksIcon->setMovie(syncIconMovie);
+        //if(count != prevBlocks)
+        //    syncIconMovie->jumpToNextFrame();
+        //prevBlocks = count;
 
+        labelBlocksIcon->setPixmap(QIcon(":/icons/notsynced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
         overviewPage->showOutOfSyncWarning(true);
 
-        tooltip += QString("<br>");
-        tooltip += tr("Last received block was generated %1 ago.").arg(timeBehindText);
-        tooltip += QString("<br>");
-        tooltip += tr("Transactions after this will not yet be visible.");
+        //tooltip += QString("<br>");
+        //tooltip += tr("Last received block was generated %1 ago.").arg(timeBehindText);
+        //tooltip += QString("<br>");
+        //tooltip += tr("Transactions after this will not yet be visible.");
     }
 
     // Don't word-wrap this (fixed-width) tooltip
-    tooltip = QString("<nobr>") + tooltip + QString("</nobr>");
+    //tooltip = QString("<nobr>") + tooltip + QString("</nobr>");
 
-    labelBlocksIcon->setToolTip(tooltip);
-    progressBarLabel->setToolTip(tooltip);
-    progressBar->setToolTip(tooltip);
+    //labelBlocksIcon->setToolTip(tooltip);
+    //progressBarLabel->setToolTip(tooltip);
+    //progressBar->setToolTip(tooltip);
 
-    statusBar()->setVisible(true);
+    //statusBar()->setVisible(true);
+    statusBar()->setVisible(fShowStatusBar);
 }
 
 void BitcoinGUI::message(const QString &title, const QString &message, bool modal, unsigned int style)
@@ -970,9 +990,9 @@ void BitcoinGUI::gotoAddressBookPage()
 
 void BitcoinGUI::gotoTradingPage()
 {
-
-     TradingAction->setChecked(true);
-     centralStackedWidget->setCurrentWidget(tradingDialogPage);
+     // TODO: update for different exchange and re-enable
+     //TradingAction->setChecked(true);
+     //centralStackedWidget->setCurrentWidget(tradingDialogPage);
 
   //  exportAction->setEnabled(false);
   //  disconnect(exportAction, SIGNAL(triggered()), 0, 0);
@@ -1267,23 +1287,23 @@ void BitcoinGUI::detectShutdown()
 
 void BitcoinGUI::showProgress(const QString &title, int nProgress)
 {
-    if (nProgress == 0)
-    {
-        progressDialog = new QProgressDialog(title, "", 0, 100);
-        progressDialog->setWindowModality(Qt::ApplicationModal);
-        progressDialog->setMinimumDuration(0);
-        progressDialog->setCancelButton(0);
-        progressDialog->setAutoClose(false);
-        progressDialog->setValue(0);
-    }
-    else if (nProgress == 100)
-    {
-        if (progressDialog)
-        {
-            progressDialog->close();
-            progressDialog->deleteLater();
-        }
-    }
-    else if (progressDialog)
-        progressDialog->setValue(nProgress);
+    //if (nProgress == 0)
+    //{
+    //    progressDialog = new QProgressDialog(title, "", 0, 100);
+    //    progressDialog->setWindowModality(Qt::ApplicationModal);
+    //    progressDialog->setMinimumDuration(0);
+    //    progressDialog->setCancelButton(0);
+    //    progressDialog->setAutoClose(false);
+    //    progressDialog->setValue(0);
+    //}
+    //else if (nProgress == 100)
+    //{
+    //    if (progressDialog)
+    //    {
+   //         progressDialog->close();
+   //         progressDialog->deleteLater();
+   //     }
+   // }
+   // else if (progressDialog)
+   //     progressDialog->setValue(nProgress);
 }
