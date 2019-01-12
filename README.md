@@ -8,7 +8,7 @@ What is the INSaNe [INSN] Blockchain?
 *TODO: Update documentation regarding implemented tech as this section is out of date and much progress and upgrades have been made to mentioned sections...*
 
 ### Overview
-Espers is a blockchain project with the goal of offering secured messaging, websites on the chain and an overall pleasing experience to the user.
+INSaNe is a blockchain project with the goal of offering secured messaging, masternodes, and an overall pleasing experience to the user.
 
 ### Blockchain Technology
 The INSaNe [INSN] Blockchain is an experimental smart contract platform protocol that enables 
