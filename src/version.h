@@ -30,13 +30,13 @@ static const int DATABASE_VERSION = 70509;
 //
 // network protocol versioning
 //
-static const int PROTOCOL_VERSION = 62011;
+static const int PROTOCOL_VERSION = 62012;
 
 // intial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
 
 // disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = 62010;
+static const int MIN_PEER_PROTO_VERSION = 62011;
 
 // minimum peer version accepted by DarkSendPool
 static const int MIN_POOL_PEER_PROTO_VERSION = 62005;
@@ -54,10 +54,10 @@ static const int CADDR_TIME_VERSION = 31402;
 
 // only request blocks from nodes outside this range of versions
 static const int NOBLKS_VERSION_START = 0;
-static const int NOBLKS_VERSION_END = 62009;
+static const int NOBLKS_VERSION_END = 62010;
 
 // hard cutoff time for legacy network connections
-static const int64_t HRD_LEGACY_CUTOFF = 1535486400;  // ON (Tuesday, August 28, 2018 8:00:00 PM)
+static const int64_t HRD_LEGACY_CUTOFF = 9993058800; // OFF (NOT TOGGLED)
 
 // hard cutoff time for future network connections
 static const int64_t HRD_FUTURE_CUTOFF = 9993058800; // OFF (NOT TOGGLED)

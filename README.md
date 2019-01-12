@@ -1,10 +1,11 @@
-INSaNe [INSN] integration/staging tree
+INSaNe [INSN] 2017-2019 integration/staging tree
 =====================================
 
 http://www.insanecoin.com
 
 What is the INSaNe [INSN] Blockchain?
----------------------------
+-------------------------------------
+*TODO: Update documentation regarding implemented tech as this section is out of date and much progress and upgrades have been made to mentioned sections...*
 
 ### Overview
 Espers is a blockchain project with the goal of offering secured messaging, websites on the chain and an overall pleasing experience to the user.
@@ -25,20 +26,24 @@ Ensuring Insane stays as secure and robust as possible the CryptoCoderz team hav
 
 Specifications and General info
 ------------------
-INSaNe uses libsecp256k1,
-			  libgmp,
-			  Boost1.66,
-			  OR Boost1.57,  
-			  Openssl1.02o,
-			  Berkeley DB 6.2.23,
-			  QT5.11 to compile
+INSaNe uses 
+		
+		libsecp256k1,
+		libgmp,
+		Boost1.68,
+		OR Boost1.57,  
+		Openssl1.02x,
+		OR Openssl1.1x,
+		Berkeley DB 6.2.32,
+		T5.11 to compile
 
 
-Block Spacing: 5 Minutes
-Stake Minimum Age: 15 Confirmations (PoS-v3) | 30 Minutes (PoS-v2)
+Block Spacing: 
 
-Port: 10255
-RPC Port: 10257
+		5 Minutes
+		Stake Minimum Age: 15 Confirmations (PoS-v3) | 30 Minutes (PoS-v2)
+		Port: 10255
+		RPC Port: 10257
 
 
 BUILD LINUX
@@ -49,24 +54,37 @@ BUILD LINUX
 ### Note: guide updated for compiling with Ubuntu 18.04 LTS Bionic
 
 ### Become poweruser
+```
 sudo -i
+```
 
 ### Dependencies install
+```
 cd ~; sudo apt-get install ntp git build-essential libssl1.0-dev libdb-dev libdb++-dev libboost-all-dev libqrencode-dev libcurl4-openssl-dev curl libzip-dev; apt-get update; apt-get upgrade; apt-get install git make automake build-essential libboost-all-dev; apt-get install yasm binutils libcurl4-openssl-dev openssl libssl1.0-dev; sudo apt-get install libgmp-dev;
+```
 
 ### Dependencies build and link
+```
 cd ~; wget http://download.oracle.com/berkeley-db/db-6.2.32.NC.tar.gz; tar zxf db-6.2.32.NC.tar.gz; cd db-6.2.32.NC/build_unix; ../dist/configure --enable-cxx; make; sudo make install; sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb-6.2.so /usr/lib/libdb-6.2.so; sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb_cxx-6.2.so /usr/lib/libdb_cxx-6.2.so; export BDB_INCLUDE_PATH="/usr/local/BerkeleyDB.6.2/include"; export BDB_LIB_PATH="/usr/local/BerkeleyDB.6.2/lib"
+```
 
 ### Personal upload EXAMPLE
+```
 cd ~; sudo cp -r /home/ftpuser/ftp/files/INSN-clean/. ~/INSN
+```
 
 ### GitHub pull RECOMMENDED
+```
 cd ~; git clone https://github.com/CryptoCoderz/INSN
+```
 
 ### Build INSN daemon
+```
 cd ~/INSN/src; chmod a+x obj; chmod a+x leveldb/build_detect_platform; chmod a+x secp256k1; chmod a+x leveldb; chmod a+x ~/INSN/src; chmod a+x ~/INSN; make -f makefile.unix USE_UPNP=-; cd ~; cp ~/INSN/src/INSaNed /usr/local/bin;
+```
 
 ### Create config file for daemon
+```
 cd ~; sudo ufw allow 10255/tcp; sudo ufw allow 10257/tcp; sudo mkdir ~/.INSN; cat << "CONFIG" >> ~/.INSN/INSaNe.conf
 listen=1
 server=1
@@ -120,16 +138,21 @@ addnode=70.35.202.246
 addnode=74.208.156.184
 CONFIG
 chmod 700 ~/.INSN/INSaNe.conf; chmod 700 ~/.INSN; ls -la ~/.INSN
+```
 
 ### Run INSN daemon
+```
 cd ~; INSaNed; INSaNed getinfo
+```
 
 ### Troubleshooting
 ### for basic troubleshooting run the following commands when compiling:
 ### this is for minupnpc errors compiling
 
+```
 make clean -f makefile.unix USE_UPNP=-
 make -f makefile.unix USE_UPNP=-
+```
 
 License
 -------

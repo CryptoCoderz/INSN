@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = INSaNe-qt
-VERSION = 1.0.5.5
+VERSION = 1.0.5.6
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
@@ -24,9 +24,9 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 # as a reference refer to the below section
 
 win32{
-BOOST_LIB_SUFFIX=-mgw81-mt-s-x32-1_67
-BOOST_INCLUDE_PATH=C:/deps/boost_1_67_0
-BOOST_LIB_PATH=C:/deps/boost_1_67_0/stage/lib
+BOOST_LIB_SUFFIX=-mgw81-mt-s-x32-1_68
+BOOST_INCLUDE_PATH=C:/deps/boost_1_68_0
+BOOST_LIB_PATH=C:/deps/boost_1_68_0/stage/lib
 BDB_INCLUDE_PATH=C:/deps/db-6.2.32.NC/build_unix
 BDB_LIB_PATH=C:/deps/db-6.2.32.NC/build_unix
 OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2o/include
@@ -605,23 +605,6 @@ isEmpty(OPENSSL_INCLUDE_PATH) {
 isEmpty(OPENSSL_LIB_PATH) {
     macx:OPENSSL_LIB_PATH = /usr/local/openssl-1.0.1p/lib
     windows:OPENSSL_LIB_PATH=C:/dev/coindeps32/openssl-1.0.1p/lib
-}
-
-# use: qmake "USE_UPNP=1" ( enabled by default; default)
-#  or: qmake "USE_UPNP=0" (disabled by default)
-#  or: qmake "USE_UPNP=-" (not supported)
-# miniupnpc (http://miniupnp.free.fr/files/) must be installed for support
-contains(USE_UPNP, -) {
-    message(Building without UPNP support)
-} else {
-    message(Building with UPNP support)
-    count(USE_UPNP, 0) {
-        USE_UPNP=1
-    }
-    DEFINES += USE_UPNP=$$USE_UPNP MINIUPNP_STATICLIB STATICLIB
-    INCLUDEPATH += $$MINIUPNPC_INCLUDE_PATH
-    LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
-    win32:LIBS += -liphlpapi
 }
 
 windows:DEFINES += WIN32
