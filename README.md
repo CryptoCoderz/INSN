@@ -37,6 +37,7 @@ INSaNe uses
 		Berkeley DB 6.2.32,
 		T5.11 to compile
 
+General Specs
 
 		Block Spacing: 5 Minutes
 		Stake Minimum Age: 15 Confirmations (PoS-v3) | 30 Minutes (PoS-v2)
