@@ -23,6 +23,13 @@ class CPubKey;
 // see www.keylength.com
 // script supports up to 75 for single byte push
 
+#if OPENSSL_VERSION_NUMBER > 0x10100000L
+struct ECDSA_SIG_st {
+   BIGNUM *r;
+   BIGNUM *s;
+};
+#endif
+
 // secure_allocator is defined in allocators.h
 // CPrivKey is a serialized private key, with all parameters included (279 bytes)
 typedef std::vector<unsigned char, secure_allocator<unsigned char> > CPrivKey;
