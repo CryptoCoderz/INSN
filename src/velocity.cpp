@@ -80,7 +80,7 @@ bool Velocity(CBlockIndex* prevBlock, CBlock* block)
             TXinput = tx.GetValueIn(mapInputs);
             TXfee = TXinput - TXvalue;
             TXcount = block->vtx.size();
-            TXlogic = GetPrevAccountBalance - TXinput;
+            // TXlogic = GetPrevAccountBalance - TXinput;
             // TXrate = block->GetBlockTime() - prevBlock->GetBlockTime();
         }
         // Set Velocity logic value
