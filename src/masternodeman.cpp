@@ -459,6 +459,26 @@ CMasternode* CMasternodeMan::GetCurrentMasterNode(int mod, int64_t nBlockHeight,
     return winner;
 }
 
+bool CMasternodeMan::IsPayeeAValidMasternode(CScript payee)
+{
+    if(!darkSendPool.IsBlockchainSynced()) return true;
+
+    int mnCount = 0;
+    bool fValid = false;
+    BOOST_FOREACH(CMasternode& mn, vMasternodes) {
+
+        mn.Check();
+        mnCount++;
+        if(!mn.IsEnabled()) continue;
+
+        CScript currentMasternode = GetScriptForDestination(mn.pubkey.GetID());
+        LogPrintf("* Masternode %d - testing %s\n", mnCount, currentMasternode.ToString().c_str());
+        if(payee == currentMasternode)
+           fValid = true;
+    }
+    return fValid;
+}
+
 int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight, int minProtocol, bool fOnlyActive)
 {
     std::vector<pair<unsigned int, CTxIn> > vecMasternodeScores;

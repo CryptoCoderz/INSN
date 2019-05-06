@@ -3549,6 +3549,15 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     CTxIn vin;
     nPoSageReward = nReward;
 
+    // define address
+    CBitcoinAddress devopaddress;
+    if (Params().NetworkID() == CChainParams::MAIN)
+        devopaddress = CBitcoinAddress("i9ByhsYAV2A9A67MsyjWpEjPx3VCkVCLwr");
+    else if (Params().NetworkID() == CChainParams::TESTNET)
+        devopaddress = CBitcoinAddress("");
+    else if (Params().NetworkID() == CChainParams::REGTEST)
+        devopaddress = CBitcoinAddress("");
+
     // Masternode Payments
     int payments = 1;
     // start masternode payments
@@ -3582,7 +3591,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             if(winningNode){
                 payee = GetScriptForDestination(winningNode->pubkey.GetID());
             } else {
-                return error("CreateCoinStake: Failed to detect masternode to pay\n");
+                payee = GetScriptForDestination(devopaddress.Get());
             }
         }
     } else {
@@ -3631,15 +3640,6 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
     bool hasdevopsPay = true;
     if(bDevOpsPayment) {
-        // define address
-        CBitcoinAddress devopaddress;
-        if (Params().NetworkID() == CChainParams::MAIN)
-            devopaddress = CBitcoinAddress("i9ByhsYAV2A9A67MsyjWpEjPx3VCkVCLwr");
-      //  else if (Params().NetworkIDString() == CBaseChainParams::TESTNET)
-      //      address = CBitcoinAddress(" ");
-      //  else if (Params().NetworkIDString() == CBaseChainParams::REGTEST)
-      //      address = CBitcoinAddress(" ");
-
         // verify address
         if(devopaddress.IsValid())
         {

@@ -366,9 +366,96 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
 
         if (fDebug && GetBoolArg("-printpriority", false))
             LogPrintf("CreateNewBlock(): total size %u\n", nBlockSize);
-// > INSN <
-        if (!fProofOfStake)
+        // > INSN <
+        if (!fProofOfStake) {
+            // Assign standard payout for coinbse rewards
             pblock->vtx[0].vout[0].nValue = GetProofOfWorkReward(pindexPrev->nHeight + 1, nFees);
+            // Check for payment update fork
+            if(pindexBest->GetBlockTime() > 0){
+                if(pindexBest->GetBlockTime() > nPaymentUpdate_1){ // OFF (NOT TOGGLED)
+                    // masternode/devops payment
+                    int64_t blockReward = GetProofOfWorkReward(pindexPrev->nHeight + 1, nFees);
+                    bool hasPayment = true;
+                    bool bMasterNodePayment = true;// TODO: Setup proper network toggle
+                    CScript mn_payee;
+                    CScript do_payee;
+                    CTxIn vin;
+
+                    // Determine our payment address for devops
+                    //
+                    // OLD IMPLEMENTATION COMMNETED OUT
+                    // CScript devopsScript;
+                    // devopsScript << OP_DUP << OP_HASH160 << ParseHex(Params().DevOpsPubKey()) << OP_EQUALVERIFY << OP_CHECKSIG;
+                    // do_payee = devopsScript;
+                    //
+                    // Define Address
+                    //
+                    // TODO: Clean this up, it's a mess (could be done much more cleanly)
+                    //       Not an issue otherwise, merely a pet peev. Done in a rush...
+                    //
+                    CBitcoinAddress devopaddress;
+                    if (Params().NetworkID() == CChainParams::MAIN)
+                        devopaddress = CBitcoinAddress("i9ByhsYAV2A9A67MsyjWpEjPx3VCkVCLwr");
+                    else if (Params().NetworkID() == CChainParams::TESTNET)
+                        devopaddress = CBitcoinAddress("");
+                    else if (Params().NetworkID() == CChainParams::REGTEST)
+                        devopaddress = CBitcoinAddress("");
+
+                    // verify address
+                    if(devopaddress.IsValid())
+                    {
+                        //spork
+                        if(pindexBest->GetBlockTime() > 1546123500) { // ON  (Saturday, December 29, 2018 10:45 PM)
+                                do_payee = GetScriptForDestination(devopaddress.Get());
+                        }
+                        else {
+                            hasPayment = false;
+                        }
+                    }
+                    else
+                    {
+                        LogPrintf("CreateNewBlock(): Failed to detect dev address to pay\n");
+                    }
+
+                    if(bMasterNodePayment) {
+                        //spork
+                        if(!masternodePayments.GetBlockPayee(pindexPrev->nHeight+1, mn_payee, vin)){
+                            CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
+                            if(winningNode){
+                                mn_payee = GetScriptForDestination(winningNode->pubkey.GetID());
+                            } else {
+                                mn_payee = do_payee;
+                            }
+                        }
+                    } else {
+                        hasPayment = false;
+                    }
+
+                    CAmount masternodePayment = GetMasternodePayment(nHeight, blockReward);
+                    CAmount devopsPayment = GetDevOpsPayment(nHeight, blockReward);
+
+                    if (hasPayment) {
+                        pblock->vtx[0].vout.resize(3);
+                        pblock->vtx[0].vout[1].scriptPubKey = mn_payee;
+                        pblock->vtx[0].vout[1].nValue = masternodePayment;
+                        pblock->vtx[0].vout[2].scriptPubKey = do_payee;
+                        pblock->vtx[0].vout[2].nValue = devopsPayment;
+                        pblock->vtx[0].vout[0].nValue = blockReward - (masternodePayment + devopsPayment);
+                    }
+
+                    CTxDestination address1;
+                    CTxDestination address3;
+                    ExtractDestination(mn_payee, address1);
+                    ExtractDestination(do_payee, address3);
+                    CBitcoinAddress address2(address1);
+                    CBitcoinAddress address4(address3);
+                    LogPrintf("CreateNewBlock(): Masternode payment %lld to %s\n",
+                    masternodePayment, address2.ToString().c_str());
+                    LogPrintf("CreateNewBlock(): Devops payment %lld to %s\n",
+                    devopsPayment, address4.ToString().c_str());
+                }
+            } //
+        }
 
         if (pFees)
             *pFees = nFees;

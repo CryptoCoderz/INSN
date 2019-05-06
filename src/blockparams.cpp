@@ -310,16 +310,23 @@ unsigned int VRX_Retarget(const CBlockIndex* pindexLast, bool fProofOfStake)
     if (pindexLast->nHeight < scanheight+114)
         return bnVelocity.GetCompact(); // can't index prevblock
 
-    // Allow for difficulty reset during upgrade
+    // Allow for difficulty reset during upgrade 1
     if (pindexBest->GetBlockTime() > 1521288000){ // ON (Sat, 17 Mar 2018 05:00:00 GMT-07:00)
         if(pindexBest->GetBlockTime() < 1521305000) // ON (Sat, 17 Mar, 2018 09:43:20 GMT-07:00 DST)
             return bnVelocity.GetCompact();
     }
 
-    // Allow for single block difficulty reset for reward redux updates
+    // Allow for difficulty reset during upgrade 2
     // ((5 * 60) * 5000) / 60 / 60 / 24 = 17.3611111111 days until fork
     if (pindexLast->nHeight == 78768) // Height of set: 73768
         return bnVelocity.GetCompact(); // reset diff for update fork
+
+    // Allow for difficulty reset during upgrade 3
+    if(pindexLast->GetBlockTime() > nPaymentUpdate_1) {// OFF (NOT TOGGLED)
+        if(pindexLast->GetBlockTime() < nPaymentUpdate_1+480) {
+            return bnVelocity.GetCompact(); // diff reset
+        }
+    }
 
     // Differentiate PoW/PoS prev block
     BlockVelocityType = GetLastBlockIndex(pindexLast, fProofOfStake);

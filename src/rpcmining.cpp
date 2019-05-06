@@ -7,6 +7,8 @@
 #include "blockparams.h"
 #include "chainparams.h"
 #include "main.h"
+#include "masternodeman.h"
+#include "masternode-payments.h"
 #include "db.h"
 #include "txdb.h"
 #include "init.h"
@@ -648,6 +650,8 @@ Value getblocktemplate(const Array& params, bool fHelp)
         aMutable.push_back("prevblock");
     }
 
+    Array aVotes;
+
     Object result;
     result.push_back(Pair("version", pblock->nVersion));
     result.push_back(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
@@ -663,6 +667,43 @@ Value getblocktemplate(const Array& params, bool fHelp)
     result.push_back(Pair("curtime", (int64_t)pblock->nTime));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
     result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
+    result.push_back(Pair("votes", aVotes));
+
+    // Check for payment upgrade fork
+    if (pindexBest->GetBlockTime() > 0)
+    {
+        if (pindexBest->GetBlockTime() > nPaymentUpdate_1) // OFF (NOT TOGGLED)
+        {
+            // Set Masternode / DevOps payments
+            int64_t masternodePayment = GetMasternodePayment(pindexPrev->nHeight+1, (int64_t)pblock->vtx[0].vout[0].nValue);
+            int64_t devopsPayment = GetDevOpsPayment(pindexPrev->nHeight+1, (int64_t)pblock->vtx[0].vout[0].nValue);
+
+            // Include DevOps payments
+            CAmount devopsSplit = devopsPayment;
+            Object devopsReward;
+            devopsReward.push_back(Pair("devopspayee", Params().DevOpsAddress()));
+            devopsReward.push_back(Pair("amount", devopsSplit));
+            result.push_back(Pair("devopsreward", devopsReward));
+            result.push_back(Pair("devops_reward_enforced", true));
+
+            // Include Masternode payments
+            CAmount masternodeSplit = masternodePayment;
+            CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
+
+            if (winningNode) {
+                CScript payee = GetScriptForDestination(winningNode->pubkey.GetID());
+                CTxDestination address1;
+                ExtractDestination(payee, address1);
+                CBitcoinAddress address2(address1);
+                result.push_back(Pair("payee", address2.ToString().c_str()));
+            } else {
+                result.push_back(Pair("payee", Params().DevOpsAddress().c_str()));
+            }
+            result.push_back(Pair("payee_amount", (int64_t)masternodeSplit));
+            result.push_back(Pair("masternode_payments", true));
+            result.push_back(Pair("enforce_masternode_payments", true));
+        }
+    }
 
     return result;
 }

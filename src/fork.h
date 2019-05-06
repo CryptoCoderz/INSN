@@ -24,5 +24,7 @@ static const int64_t RWRD_REDUX_TOGGLE = 1535486400; // Tuesday, August 28, 2018
 static const int64_t RWRD_FIX_TOGGLE = 827;
 /** MN Reward Fix toggle */
 static const int64_t MN_FIX_TOGGLE = 5500;
+/** Masternode/Devops Payment Update 1 **/
+static const int64_t nPaymentUpdate_1 = 9993058800;
 
 #endif // BITCOIN_FORK_H
