@@ -615,16 +615,14 @@ void SocketSendData(CNode *pnode)
                 break;
             }
         } else {
-            if (nBytes < 0) {
-                // error
-                int nErr = WSAGetLastError();
-                if (nErr != WSAEWOULDBLOCK && nErr != WSAEMSGSIZE && nErr != WSAEINTR && nErr != WSAEINPROGRESS)
-                {
-                    LogPrintf("socket send error %d\n", nErr);
-                    pnode->CloseSocketDisconnect();
-                }
+            if (nBytes == 0) {
+                // couldn't send anything at all
+                LogPrintf("socket send error: data failure\n");
+                pnode->CloseSocketDisconnect();
+                break;
             }
-            // couldn't send anything at all
+
+            pnode->CloseSocketDisconnect();
             break;
         }
     }
